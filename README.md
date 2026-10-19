@@ -18,6 +18,8 @@
 cd backend && .venv/bin/python -m pytest -q          # 物理エンジン・API（30件）
 cd frontend && npm run test:e2e                       # ブラウザ操作 E2E（Playwright）
 ```
+PR では GitHub Actions（`.github/workflows/ci.yml`）が上記と型チェック・ビルドを自動実行します。運用は `docs/AI-DLC.md` を参照。
+
 WSL などで Chromium の共有ライブラリ（libnss3 など）が無い場合は `npx playwright install-deps chromium`（要 sudo）を実行するか、`LD_LIBRARY_PATH` で指定してください。
 
 ## 構成

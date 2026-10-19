@@ -6,3 +6,18 @@ requires-python = ">=3.11"
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 130
+extend-exclude = [".venv", "data"]
+
+[tool.ruff.lint]
+# pyflakes / pycodestyle / isort / bugbear / pyupgrade
+select = ["E", "F", "W", "I", "B", "UP"]
+# 日本語のメッセージ文字列が長いため行長は検査しない（折り返しは可読性を下げる）
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# テンソルの添字 l（Γ^l_ij）は数式表記との対応を優先する
+"chronos/physics/models.py" = ["E741"]

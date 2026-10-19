@@ -38,10 +38,13 @@ CHRONOS の開発は **GitHub Issues を管理元**とし、AI-DLC（AI-Driven D
 | 項目 | コマンド | 基準 |
 |---|---|---|
 | 物理・API テスト | `cd backend && .venv/bin/python -m pytest -q` | 全件合格（2026-10-20 時点のベースライン: 30 件） |
+| Python lint | `cd backend && .venv/bin/ruff check .` | 指摘 0（ルールは `backend/pyproject.toml`） |
 | 型チェック | `cd frontend && npx tsc -b` | エラー 0 |
 | Lint | `cd frontend && npx oxlint src` | エラー 0（警告は増やさない。ベースライン 3 件） |
 | ビルド | `cd frontend && npx vite build` | 成功 |
 | E2E | `cd frontend && npm run test:e2e` | 全件合格 |
+
+これらは GitHub Actions（`.github/workflows/ci.yml`）で PR と main への push のたびに自動実行される。ジョブは「Python lint」「pytest」「TypeScript 型チェック（oxlint を含む）」「フロントエンドビルド」「Playwright E2E」の 5 つ。E2E のレポートとスクリーンショットは artifact `playwright-report` から取得できる。PR は CI がすべて成功してからレビューを依頼する。
 
 科学的正確性の原則（`.kiro/steering/product.md`）は全 Issue に適用する。特に「数学的に成立」と「物理的に実現可能」を区別し、判定不能を成功・失敗に分類しない。
 

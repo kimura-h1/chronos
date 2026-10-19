@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 import threading
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from functools import cached_property
 from typing import Any
 
@@ -128,7 +128,7 @@ class SpacetimeModel:
     def critical_radius_analytic(self, params: dict[str, float]) -> float | None:
         if self.critical_radius_expr is None:
             return None
-        subs = dict(zip(self.param_symbols(), self.pvals(params)))
+        subs = dict(zip(self.param_symbols(), self.pvals(params), strict=True))
         return float(self.critical_radius_expr.subs(subs))
 
     # ---- field equations ------------------------------------------------
