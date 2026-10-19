@@ -1,0 +1,21 @@
+# Tasks — CHRONOS-001
+
+- [x] 1. SDD環境整備（steering, requirements, design, tasks）
+- [x] 2. 物理エンジン
+  - [x] 2.1 モデル定義・記号計算（g, Γ, Einstein）と数値化 _(R1)_
+  - [x] 2.2 分類と誤差上界 _(R2)_
+  - [x] 2.3 円軌道CTC検証 _(R3.1)_
+  - [x] 2.4 測地線積分と保存量・解析比較 _(R3.2)_
+  - [x] 2.5 過去到達ミッション _(R3.3, R3.4)_
+  - [x] 2.6 プロファイル・光円錐データ _(R5.2)_
+- [x] 3. 実験ランナー（開始・停止・永続化）_(R4)_
+- [x] 4. FastAPI _(R4, R5)_
+- [x] 5. pytest（物理・API）_(R7.1, R7.2)_
+- [x] 6. フロントエンド
+  - [x] 6.1 Vite/React/Tailwind/R3F/Recharts 環境、APIクライアント
+  - [x] 6.2 Research Dashboard _(R5.1)_
+  - [x] 6.3 Spacetime Visualizer _(R5.2)_
+  - [x] 6.4 Experiment Control _(R5.3, R4.4)_
+  - [x] 6.5 Results Analysis _(R5.4)_
+- [x] 7. 起動スクリプト・README
+- [x] 8. 検証: 開発サーバー起動、Playwright E2E、スクリーンショット確認 _(R7.3)_

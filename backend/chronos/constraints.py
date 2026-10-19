@@ -1,0 +1,62 @@
+"""未解決の物理的制約。文言は確立された事実・仮説の区別を明示する。"""
+
+CONSTRAINTS = [
+    {
+        "id": "observation",
+        "title": "観測される宇宙との不整合",
+        "status": "観測と不整合",
+        "severity": "critical",
+        "detail": "Gödel宇宙は膨張せず、宇宙全体が回転している。観測される宇宙は膨張しており、宇宙マイクロ波背景放射の高い等方性は大域的回転を強く制限している。我々の宇宙はGödel解ではない。",
+        "source": "観測的宇宙論（ハッブル膨張、CMB等方性）",
+    },
+    {
+        "id": "lambda_sign",
+        "title": "宇宙定数の符号",
+        "status": "観測と不整合",
+        "severity": "critical",
+        "detail": "Gödel解は Λ = −1/(2a²) < 0 を要求する（本システムの記号計算で導出・確認）。観測される加速膨張は正の宇宙定数と整合的である。",
+        "source": "本システムの計算（/api/models/godel/verification）",
+        "computed": True,
+    },
+    {
+        "id": "global_structure",
+        "title": "CTCは「作る」ものではなく時空全体の性質",
+        "status": "構造的制約",
+        "severity": "high",
+        "detail": "Gödel時空では全ての点をCTCが通り、コーシー面が存在しない。これは「CTCを含む時空が数学的に存在する」ことを示すが、CTCを持たない領域から出発してタイムマシンを建造できることを示すものではない。",
+        "source": "Hawking & Ellis (1973) §5.7",
+    },
+    {
+        "id": "chronology_protection",
+        "title": "時間順序保護仮説",
+        "status": "未解決（仮説）",
+        "severity": "high",
+        "detail": "量子効果がCTCの形成を妨げるという仮説。証明も反証もされていない。",
+        "source": "S. W. Hawking, Phys. Rev. D 46, 603 (1992)",
+    },
+    {
+        "id": "propulsion",
+        "title": "推進コスト（加速度・質量比）",
+        "status": "定量評価中（本システム）",
+        "severity": "high",
+        "detail": "CTCは測地線ではないため推力が必要。円軌道・ミッション実験で固有加速度と総ラピディティ η を計算し、理想光子ロケットの質量比 exp(η) を下限評価している。η はスケール a に依存しない。",
+        "source": "本システムの計算（実験: 円軌道CTC検証 / 過去到達ミッション）",
+        "computed": True,
+    },
+    {
+        "id": "consistency",
+        "title": "因果的整合性（過去の自分との相互作用）",
+        "status": "未解決",
+        "severity": "medium",
+        "detail": "過去の自分に会った場合の整合性（いわゆるパラドックス）を扱う確立した物理理論は存在しない。自己無撞着性を仮定する立場などが提案されているが検証されていない。",
+        "source": "—",
+    },
+    {
+        "id": "quantum_gravity",
+        "title": "量子重力効果",
+        "status": "未解決",
+        "severity": "medium",
+        "detail": "本システムは古典一般相対論の範囲で計算している。量子重力の効果は未知であり、扱っていない。",
+        "source": "—",
+    },
+]

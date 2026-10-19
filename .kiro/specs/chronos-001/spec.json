@@ -1,0 +1,11 @@
+{
+  "feature_name": "chronos-001",
+  "title": "閉じた時間的曲線の検証（Gödel時空）",
+  "language": "ja",
+  "phase": "verification",
+  "approvals": {
+    "requirements": {"generated": true, "approved": true},
+    "design": {"generated": true, "approved": true},
+    "tasks": {"generated": true, "approved": true}
+  }
+}

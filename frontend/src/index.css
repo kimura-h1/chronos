@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #070b10;
+  --color-panel: #0f151d;
+  --color-panel-2: #141c26;
+  --color-line: #233041;
+  --color-line-strong: #33465c;
+  --color-ink: #e6edf3;
+  --color-ink-2: #a9b6c4;
+  --color-ink-3: #6f7f91;
+  --color-accent: #5fd4e8;
+  --color-ctc: #d55181;
+  --color-warn: #fab219;
+  --color-bad: #d03b3b;
+  --color-good: #0ca30c;
+  --color-s1: #3987e5;
+  --color-s2: #d95926;
+  --color-s3: #199e70;
+  --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Noto Sans JP", monospace;
+}
+
+:root { color-scheme: dark; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(95,212,232,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(95,212,232,0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: #233041; border-radius: 4px; }
+input[type=number]::-webkit-inner-spin-button { opacity: .4; }
+@keyframes pulse-lamp { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
+.lamp-pulse { animation: pulse-lamp 1.2s ease-in-out infinite; }
