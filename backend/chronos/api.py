@@ -43,7 +43,7 @@ def create_app(data_path: Path | None = DATA_PATH, warm: bool = True) -> FastAPI
         try:
             return get_model(model_id)
         except KeyError:
-            raise HTTPException(404, f"未知のモデル: {model_id}")
+            raise HTTPException(404, f"未知のモデル: {model_id}") from None
 
     def params_for(model, a: float | None):
         p = {model.params[0].key: a if a is not None else model.params[0].default}
@@ -87,9 +87,9 @@ def create_app(data_path: Path | None = DATA_PATH, warm: bool = True) -> FastAPI
                 return {"preview": True, "status": "completed", "result": runner.run_sync(req.type, req.model, req.params)}
             return runner.submit(req.type, req.model, req.params, req.label)
         except ExperimentInputError as exc:
-            raise HTTPException(422, str(exc))
+            raise HTTPException(422, str(exc)) from exc
         except KeyError as exc:
-            raise HTTPException(404, str(exc))
+            raise HTTPException(404, str(exc)) from exc
 
     @app.get("/api/experiments")
     def list_experiments():
@@ -99,7 +99,7 @@ def create_app(data_path: Path | None = DATA_PATH, warm: bool = True) -> FastAPI
         try:
             return runner.get(jid)
         except KeyError:
-            raise HTTPException(404, f"実験が見つかりません: {jid}")
+            raise HTTPException(404, f"実験が見つかりません: {jid}") from None
 
     @app.get("/api/experiments/{jid}")
     def get_experiment(jid: str):

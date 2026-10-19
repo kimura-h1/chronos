@@ -5,6 +5,8 @@ export default defineConfig({
   timeout: 90_000,
   fullyParallel: false,
   workers: 1,
+  forbidOnly: !!process.env.CI,
+  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
   use: {
     baseURL: process.env.CHRONOS_URL ?? 'http://127.0.0.1:5173',
     viewport: { width: 1680, height: 1050 },
@@ -13,7 +15,7 @@ export default defineConfig({
   webServer: {
     command: '../scripts/dev.sh',
     url: 'http://127.0.0.1:5173/api/health',
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
 })

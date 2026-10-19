@@ -6,14 +6,15 @@ from __future__ import annotations
 
 import math
 import threading
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import mpmath
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.optimize import minimize_scalar
 
-from .classify import BOUNDARY, CAUSAL_LABELS, SPACELIKE, TIMELIKE, VectorClass, classify_vector, rounding_bound, summarize
+from .classify import BOUNDARY, CAUSAL_LABELS, SPACELIKE, TIMELIKE, VectorClass, classify_vector, summarize
 from .geometry import (
     alpha_max,
     conserved,
@@ -25,7 +26,7 @@ from .geometry import (
     static_frame,
     turning_radius,
 )
-from .models import IPHI, IR, IT, IY, SpacetimeModel
+from .models import IPHI, IT, SpacetimeModel
 
 # 1 光年/年² を m/s² で（光年 = 9460730472580800 m, ユリウス年 = 31557600 s）、標準重力 9.80665 m/s²
 LY_PER_YR2_IN_G = 9460730472580800 / 31557600**2 / 9.80665
@@ -356,7 +357,6 @@ def run_geodesic(model: SpacetimeModel, params: dict, ctx: Context | None = None
     rmax_events: list[np.ndarray] = []
     warnings: list[str] = []
     stopped = False
-    terminated = None
     state = np.concatenate([x0, u0])
     for k in range(n_chunks):
         if ctx.stopped:
@@ -373,10 +373,8 @@ def run_geodesic(model: SpacetimeModel, params: dict, ctx: Context | None = None
             rmax_events.extend(sol.y_events[2])
         if sol.status == 1:
             if sol.t_events[0].size:
-                terminated = "axis"
                 warnings.append(f"r < {r_axis}（極座標の軸 = 座標特異点）に到達したため λ = {sol.t_events[0][0]:.4f} で積分を終了。")
             elif sol.t_events[1].size:
-                terminated = "escape"
                 warnings.append(f"r > {r_escape} に到達したため積分を終了。")
             break
         state = sol.y[:, -1]
@@ -394,8 +392,8 @@ def run_geodesic(model: SpacetimeModel, params: dict, ctx: Context | None = None
         g = model.metric(s[1], mp)
         u = s[4:]
         norms.append(float(u @ g @ u))
-        e, l, p = conserved(g, u)
-        Es.append(e), Ls.append(l), Pys.append(p)
+        e, ang, p = conserved(g, u)
+        Es.append(e), Ls.append(ang), Pys.append(p)
     norms = np.array(norms)
     drift = np.abs(norms - norm0)
     max_drift = float(drift.max())
@@ -631,12 +629,12 @@ def run_mission(model: SpacetimeModel, params: dict, ctx: Context | None = None)
         if ctx.stopped:
             raise StopRequested
         ctx.progress(0.15 + 0.6 * li / len(legs), f"区間 {leg['label']} を検証")
-        cls = [classify_vector(model.metric(x[1], mp), tv) for x, tv in zip(leg["x"], leg["tan"])]
+        cls = [classify_vector(model.metric(x[1], mp), tv) for x, tv in zip(leg["x"], leg["tan"], strict=True)]
         all_classes += cls
         leg_sum = summarize(cls)
         norms = np.array([c.norm for c in cls])
         rel = np.array([c.norm / max(np.sum(np.abs(model.metric(x[1], mp)) * np.abs(np.outer(tv, tv))), 1e-300)
-                        for c, x, tv in zip(cls, leg["x"], leg["tan"])])
+                        for c, x, tv in zip(cls, leg["x"], leg["tan"], strict=True)])
         leg["summary"] = leg_sum
         leg["max_norm"] = float(norms.max())
         timelike = leg_sum["overall"] == "timelike_future"
@@ -668,7 +666,7 @@ def run_mission(model: SpacetimeModel, params: dict, ctx: Context | None = None)
     ctx.progress(0.8, "折れ点のラピディティを計算")
     u_rest = np.array([1.0, 0, 0, 0])
     kinks = []
-    all_timelike = all(l["summary"]["overall"] == "timelike_future" for l in legs)
+    all_timelike = all(leg["summary"]["overall"] == "timelike_future" for leg in legs)
     if all_timelike:
         kinks.append(("出発（静止 → ①）", rapidity_between(g0, u_rest, legs[0]["tan"][0])))
         kinks.append(("① → ②（r = R）", rapidity_between(gR, legs[0]["tan"][-1], legs[1]["tan"][0])))
@@ -695,7 +693,7 @@ def run_mission(model: SpacetimeModel, params: dict, ctx: Context | None = None)
         ]
 
     if summary["overall"] == "violated":
-        bad = [l["label"] for l in legs if l["summary"]["overall"] == "violated"]
+        bad = [leg["label"] for leg in legs if leg["summary"]["overall"] == "violated"]
         verdict = _verdict("不成立", "時間的経路として成立しない", f"空間的または過去向きの区間: {', '.join(bad)}。")
         is_ctc = False
     elif summary["overall"] != "timelike_future" or undetermined_time:

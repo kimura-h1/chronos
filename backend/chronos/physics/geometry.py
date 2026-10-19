@@ -91,7 +91,9 @@ def turning_radius(model: SpacetimeModel, params: dict, r0: float, E: float, L: 
 
 def find_critical_radius(model: SpacetimeModel, params: dict, r_hi: float = 6.0) -> float | None:
     """g_φφ の符号変化（正→負）を数値的に求根。"""
-    f = lambda rr: model.metric(rr, params)[IPHI, IPHI]
+    def f(rr: float) -> float:
+        return model.metric(rr, params)[IPHI, IPHI]
+
     grid = np.linspace(1e-3, r_hi, 3000)
     vals = [f(x) for x in grid]
     for i in range(len(grid) - 1):
